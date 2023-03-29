@@ -1,6 +1,6 @@
-interface ChannelProps {
+export type ChannelProps = {
   funded: boolean;
-}
+};
 
 export const Channel = ({ funded = false }: ChannelProps) => {
   if (funded) {
