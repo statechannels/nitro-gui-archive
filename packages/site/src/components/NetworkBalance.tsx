@@ -25,7 +25,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
   const total =
     myBalanceFree + myBalanceLocked + hubBalanceFree + hubBalanceLocked;
   var data = [{ title: '0', value: 100, color: 'red' }];
-  if (total !== 0n) {
+  if (total > 0) {
     const [
       myBalanceFreePercentage,
       myBalanceLockedPercentage,
