@@ -79,13 +79,14 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
               animate
               lineWidth={18}
               labelStyle={(index) => ({
-                fill: 'black',
+                fill: '#ea692b',
                 fontSize: '10px',
                 fontFamily: 'sans-serif',
               })}
               radius={42}
-              labelPosition={112} // outer labels
               data={data}
+              label={({ dataEntry }) => prettyPrintWei(myBalanceFree)}
+              labelPosition={0}
             />
           </td>
           <td className="budget-progress-bars">
