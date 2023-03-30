@@ -7,6 +7,7 @@ import {
   Typography,
   LinearProgressProps,
 } from '@material-ui/core';
+import './NetworkBalance.scss';
 
 // This prevents a runtime error in storybook
 // @ts-ignore
