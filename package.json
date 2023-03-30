@@ -46,5 +46,8 @@
   "packageManager": "yarn@3.2.1",
   "engines": {
     "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.12.4"
   }
 }

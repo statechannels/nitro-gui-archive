@@ -1,6 +1,12 @@
 import bigDecimal from 'js-big-decimal';
 import { PieChart, pieChartDefaultProps } from 'react-minimal-pie-chart';
 import { prettyPrintWei } from './utils';
+import {
+  LinearProgress,
+  Box,
+  Typography,
+  LinearProgressProps,
+} from '@material-ui/core';
 
 // This prevents a runtime error in storybook
 // @ts-ignore
@@ -25,8 +31,12 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
   const total =
     myBalanceFree + myBalanceLocked + hubBalanceFree + hubBalanceLocked;
   var data = [{ title: '0', value: 100, color: 'red' }];
+  let myBalanceFreePercentage,
+    myBalanceLockedPercentage,
+    hubBalanceFreePercentage,
+    hubBalanceLockedPercentage;
   if (total > 0) {
-    const [
+    [
       myBalanceFreePercentage,
       myBalanceLockedPercentage,
       hubBalanceFreePercentage,
@@ -59,18 +69,73 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
     ];
   }
   return (
-    <PieChart
-      className="budget-pie-chart"
-      animate
-      lineWidth={18}
-      labelStyle={(index) => ({
-        fill: 'black',
-        fontSize: '10px',
-        fontFamily: 'sans-serif',
-      })}
-      radius={42}
-      labelPosition={112} // outer labels
-      data={data}
-    />
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <PieChart
+              className="budget-pie-chart"
+              animate
+              lineWidth={18}
+              labelStyle={(index) => ({
+                fill: 'black',
+                fontSize: '10px',
+                fontFamily: 'sans-serif',
+              })}
+              radius={42}
+              labelPosition={112} // outer labels
+              data={data}
+            />
+          </td>
+          <td className="budget-progress-bars">
+            <span>Available receive capacity</span>
+            <LinearProgressWithLabel
+              variant="determinate"
+              value={hubBalanceFreePercentage ?? 0}
+              label={prettyPrintWei(hubBalanceFree)}
+              className={'bar hub'}
+            />
+            <span>Locked receive capacity </span>
+            <LinearProgressWithLabel
+              variant="determinate"
+              value={hubBalanceLockedPercentage ?? 0}
+              label={prettyPrintWei(hubBalanceLocked)}
+              className={'bar locked-hub'}
+            />
+            <span>Locked spend capacity </span>
+            <LinearProgressWithLabel
+              variant="determinate"
+              value={myBalanceLockedPercentage ?? 0}
+              label={prettyPrintWei(myBalanceLocked)}
+              className={'bar locked-me'}
+            />
+            <span>Available spend capacity</span>
+            <LinearProgressWithLabel
+              variant="determinate"
+              value={myBalanceFreePercentage ?? 0}
+              label={prettyPrintWei(myBalanceFree)}
+              className={'bar me'}
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
   );
 };
+
+function LinearProgressWithLabel(
+  props: LinearProgressProps & { value: number; label: string },
+) {
+  return (
+    <Box display="flex" alignItems="center">
+      <Box width="100%" mr={1}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box minWidth={100} maxWidth={100}>
+        <Typography variant="caption" color="textSecondary">
+          {props.label}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
