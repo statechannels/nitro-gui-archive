@@ -9,16 +9,14 @@ export const prettyPrintWei = (wei: bigint): string => {
     return '0 wei';
   } else if (!wei) {
     return 'unknown';
-  } else {
-    let formattedString: string = '';
-    decimals.forEach((decimal, index) => {
-      if (wei > 10n ** decimal) {
-        formattedString =
-          bigDecimal.divide(wei, 10n ** decimal, PRECISION) +
-          ' ' +
-          names[index];
-      }
-    });
-    return formattedString;
   }
+  let formattedString = '';
+  decimals.forEach((decimal, index) => {
+    if (wei > 10n ** decimal) {
+      formattedString = `${bigDecimal.divide(wei, 10n ** decimal, PRECISION)} ${
+        names[index]
+      }`;
+    }
+  });
+  return formattedString;
 };
