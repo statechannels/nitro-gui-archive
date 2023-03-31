@@ -12,9 +12,9 @@ const Template: ComponentStory<typeof NetworkBalance> = (
 ) => <NetworkBalance {...args} />;
 
 export const EvenStart = Template.bind(this, {
-  myBalanceFree: 100n,
+  myBalanceFree: 10n ** 18n,
   myBalanceLocked: 0n,
-  theirBalanceFree: 100n,
+  theirBalanceFree: 10n ** 18n,
   theirBalanceLocked: 0n,
 });
 
