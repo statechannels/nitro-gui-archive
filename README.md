@@ -2,7 +2,7 @@
 
 This repo contains work toward a UI for a statechannel network.
 
-Check out UI demos here: https://nitro-storybook.netlify.app/ 
+Check out UI demos here: https://nitro-storybook.netlify.app/
 
 ## Storybook
 

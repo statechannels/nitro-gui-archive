@@ -1,0 +1,11 @@
+$c-orange: #ea692b;
+$c-orange-lite: #ea692b60;
+$c-grey: #d5dbe3;
+$c-grey-lite: #d5dbe360;
+$c-orangealt: #f16721;
+:export {
+  cOrange: $c-orange;
+  cOrangeLite: $c-orange-lite;
+  cGreyLite: $c-grey-lite;
+  cGrey: $c-grey;
+}

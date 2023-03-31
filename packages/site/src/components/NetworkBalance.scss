@@ -1,0 +1,47 @@
+@import './variables';
+
+svg.budget-pie-chart {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  overflow: visible;
+  position: absolute;
+}
+
+.bar {
+  border-radius: 5;
+  background-color: white !important;
+  border-style: solid;
+  border-width: 1px;
+  margin: 5px 0px 5px;
+  &.me {
+    div.MuiLinearProgress-bar {
+      background-color: $c-orange;
+    }
+    border-color: $c-orange;
+  }
+  &.locked-me {
+    div.MuiLinearProgress-bar {
+      background-color: $c-orange-lite;
+    }
+    border-color: $c-orange-lite;
+  }
+  &.their {
+    div.MuiLinearProgress-bar {
+      background-color: $c-grey;
+    }
+    border-color: $c-grey;
+  }
+  &.locked-their {
+    div.MuiLinearProgress-bar {
+      background-color: $c-grey-lite;
+    }
+    border-color: $c-grey-lite;
+  }
+}
+
+td.budget-progress-bars {
+  span {
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+}
