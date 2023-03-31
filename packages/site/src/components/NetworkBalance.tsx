@@ -1,12 +1,12 @@
 import bigDecimal from 'js-big-decimal';
-import { PieChart, pieChartDefaultProps } from 'react-minimal-pie-chart';
-import { prettyPrintWei } from './utils';
+import { PieChart } from 'react-minimal-pie-chart';
 import {
   LinearProgress,
   Box,
   Typography,
   LinearProgressProps,
 } from '@material-ui/core';
+import { prettyPrintWei } from './utils';
 import './NetworkBalance.scss';
 
 // This prevents a runtime error in storybook
@@ -35,7 +35,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
   } = props;
   const total =
     myBalanceFree + myBalanceLocked + theirBalanceFree + theirBalanceLocked;
-  var data = [{ title: '0', value: 100, color: 'red' }];
+  let data = [{ title: '0', value: 100, color: 'red' }];
   let myBalanceFreePercentage,
     myBalanceLockedPercentage,
     theirBalanceFreePercentage,
@@ -52,6 +52,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       theirBalanceFree,
       theirBalanceLocked,
     ].map((x) => percentageOfTotal(x, total));
+
     data = [
       {
         title: prettyPrintWei(myBalanceFree),
