@@ -18,8 +18,8 @@ BigInt.prototype.toJSON = function (): string {
 export type NetworkBalanceProps = {
   myBalanceFree: bigint;
   myBalanceLocked: bigint;
-  hubBalanceFree: bigint;
-  hubBalanceLocked: bigint;
+  theirBalanceFree: bigint;
+  theirBalanceLocked: bigint;
 };
 
 function percentageOfTotal(quantity: bigint, total: bigint): number {
@@ -27,24 +27,31 @@ function percentageOfTotal(quantity: bigint, total: bigint): number {
 }
 
 export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
-  const { myBalanceFree, myBalanceLocked, hubBalanceFree, hubBalanceLocked } =
-    props;
+  const {
+    myBalanceFree,
+    myBalanceLocked,
+    theirBalanceFree,
+    theirBalanceLocked,
+  } = props;
   const total =
-    myBalanceFree + myBalanceLocked + hubBalanceFree + hubBalanceLocked;
+    myBalanceFree + myBalanceLocked + theirBalanceFree + theirBalanceLocked;
   var data = [{ title: '0', value: 100, color: 'red' }];
   let myBalanceFreePercentage,
     myBalanceLockedPercentage,
-    hubBalanceFreePercentage,
-    hubBalanceLockedPercentage;
+    theirBalanceFreePercentage,
+    theirBalanceLockedPercentage;
   if (total > 0) {
     [
       myBalanceFreePercentage,
       myBalanceLockedPercentage,
-      hubBalanceFreePercentage,
-      hubBalanceLockedPercentage,
-    ] = [myBalanceFree, myBalanceLocked, hubBalanceFree, hubBalanceLocked].map(
-      (x) => percentageOfTotal(x, total),
-    );
+      theirBalanceFreePercentage,
+      theirBalanceLockedPercentage,
+    ] = [
+      myBalanceFree,
+      myBalanceLocked,
+      theirBalanceFree,
+      theirBalanceLocked,
+    ].map((x) => percentageOfTotal(x, total));
     data = [
       {
         title: prettyPrintWei(myBalanceFree),
@@ -58,13 +65,13 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       },
 
       {
-        title: prettyPrintWei(hubBalanceLocked),
-        value: hubBalanceLockedPercentage,
+        title: prettyPrintWei(theirBalanceLocked),
+        value: theirBalanceLockedPercentage,
         color: '#d5dbe360',
       },
       {
-        title: prettyPrintWei(hubBalanceFree),
-        value: hubBalanceFreePercentage,
+        title: prettyPrintWei(theirBalanceFree),
+        value: theirBalanceFreePercentage,
         color: '#d5dbe3',
       },
     ];
@@ -93,16 +100,16 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
             <span>Available receive capacity</span>
             <LinearProgressWithLabel
               variant="determinate"
-              value={hubBalanceFreePercentage ?? 0}
-              label={prettyPrintWei(hubBalanceFree)}
-              className={'bar hub'}
+              value={theirBalanceFreePercentage ?? 0}
+              label={prettyPrintWei(theirBalanceFree)}
+              className={'bar their'}
             />
             <span>Locked receive capacity </span>
             <LinearProgressWithLabel
               variant="determinate"
-              value={hubBalanceLockedPercentage ?? 0}
-              label={prettyPrintWei(hubBalanceLocked)}
-              className={'bar locked-hub'}
+              value={theirBalanceLockedPercentage ?? 0}
+              label={prettyPrintWei(theirBalanceLocked)}
+              className={'bar locked-their'}
             />
             <span>Locked spend capacity </span>
             <LinearProgressWithLabel
