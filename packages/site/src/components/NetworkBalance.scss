@@ -7,7 +7,6 @@ svg.budget-pie-chart {
   position: absolute;
 }
 
-
 .bar {
   border-radius: 5;
   background-color: white !important;
@@ -18,7 +17,7 @@ svg.budget-pie-chart {
     div.MuiLinearProgress-bar {
       background-color: $c-orange;
     }
-    border-color: $c-orange;;
+    border-color: $c-orange;
   }
   &.locked-me {
     div.MuiLinearProgress-bar {
@@ -40,11 +39,9 @@ svg.budget-pie-chart {
   }
 }
 
-
 td.budget-progress-bars {
   span {
     font-size: 0.8rem;
     font-style: italic;
   }
 }
-

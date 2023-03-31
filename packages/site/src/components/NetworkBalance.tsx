@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { prettyPrintWei } from './utils';
 import './NetworkBalance.scss';
+import styles from './_variables.scss';
 
 // This prevents a runtime error in storybook
 // @ts-ignore
@@ -57,23 +58,23 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       {
         title: prettyPrintWei(myBalanceFree),
         value: myBalanceFreePercentage,
-        color: '#ea692b',
+        color: styles.cOrange,
       },
       {
         title: prettyPrintWei(myBalanceLocked),
         value: myBalanceLockedPercentage,
-        color: '#ea692b60',
+        color: styles.cOrangeLite,
       },
 
       {
         title: prettyPrintWei(theirBalanceLocked),
         value: theirBalanceLockedPercentage,
-        color: '#d5dbe360',
+        color: styles.cGreyLite,
       },
       {
         title: prettyPrintWei(theirBalanceFree),
         value: theirBalanceFreePercentage,
-        color: '#d5dbe3',
+        color: styles.cGrey,
       },
     ];
   }
@@ -95,6 +96,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
               data={data}
               label={({ dataEntry }) => prettyPrintWei(myBalanceFree)}
               labelPosition={0}
+              segmentsStyle={(idx) => ({ color: 'red' })}
             />
           </td>
           <td className="budget-progress-bars">
