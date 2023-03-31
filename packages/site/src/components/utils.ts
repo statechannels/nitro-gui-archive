@@ -12,7 +12,7 @@ export const prettyPrintWei = (wei: bigint): string => {
   }
   let formattedString = '';
   decimals.forEach((decimal, index) => {
-    if (wei > 10n ** decimal) {
+    if (wei >= 10n ** decimal) {
       formattedString = `${bigDecimal.divide(wei, 10n ** decimal, PRECISION)} ${
         names[index]
       }`;

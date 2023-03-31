@@ -11,6 +11,7 @@ describe('Pretty printing wei', () => {
     ${123456789n}  | ${'123.5 Mwei'}
     ${1234567890n} | ${'1.2 Gwei'}
     ${0n}          | ${'0 wei'}
+    ${10n ** 18n}  | ${'1.0 ether'}
   `('prettyPrintWei(bigNumberify($input)) = $output', ({ input, output }) => {
     expect(prettyPrintWei(input)).toStrictEqual(output);
   });
