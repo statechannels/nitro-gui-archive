@@ -23,7 +23,7 @@
       "dapps": true,
       "snaps": false
     },
-    "endowment:network-access":{}
+    "endowment:network-access": {}
   },
   "manifestVersion": "0.1"
 }

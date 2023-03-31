@@ -33,6 +33,7 @@ jobs:
       - run: yarn build
       - run: yarn lint
       - run: yarn test
+      - run: yarn workspace site build-storybook
       - name: Require clean working directory
         shell: bash
         run: |
@@ -40,12 +41,6 @@ jobs:
             echo "Working tree dirty after building"
             exit 1
           fi
-  #      - name: Validate RC changelog
-  #        if: ${{ startsWith(github.head_ref, 'release/') }}
-  #        run: yarn auto-changelog validate --rc
-  #      - name: Validate changelog
-  #        if: ${{ !startsWith(github.head_ref, 'release/') }}
-  #        run: yarn auto-changelog validate
   all-jobs-pass:
     name: All jobs pass
     runs-on: ubuntu-20.04
