@@ -97,6 +97,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
               label={({ dataEntry }) => prettyPrintWei(myBalanceFree)}
               labelPosition={0}
               segmentsStyle={(idx) => ({ color: 'red' })}
+              startAngle={90 - ((myBalanceFreePercentage / 100) * 360) / 2}
             />
           </td>
           <td className="budget-progress-bars">
