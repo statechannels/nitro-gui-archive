@@ -105,6 +105,13 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
   );
 
   const total = myBalanceFree + theirBalanceFree + lockedTotal;
+  const myTotal =
+    myBalanceFree +
+    sortedVirtualChannels.reduce(
+      (acc, x) =>
+        acc + (x.budget * BigInt(Math.round(100 * x.myPercentage))) / 100n,
+      BigInt(0),
+    );
   let data = [{ title: '0', value: 100, color: 'red' }];
   let myBalanceFreePercentage, theirBalanceFreePercentage;
 
@@ -167,7 +174,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
               })}
               radius={42}
               data={data}
-              label={({ dataEntry }) => prettyPrintWei(myBalanceFree)}
+              label={({ dataEntry }) => prettyPrintWei(myTotal)}
               labelPosition={0}
               segmentsStyle={(idx) => ({ color: 'red' })}
               paddingAngle={data.length > 1 ? 0.5 : 0}
