@@ -132,12 +132,14 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       });
     }
 
-    console.log(`MyBalanceFreePercentage: ${myBalanceFreePercentage}`);
-
     const firstHalfCutoff = virtualChannelData.length / 2;
 
+    // starting from the "my-balance" on the bottom and moving clockwise:
+
+    // stack the locked channels sorter "high-me" to "low-me" balances to the left
     data.push(...virtualChannelData.slice(0, firstHalfCutoff));
 
+    // then the "capacity" balance on top (their balance)
     if (theirBalanceFreePercentage > 0) {
       data.push({
         title: `Receive capacity: ${prettyPrintWei(theirBalanceFree)}`,
@@ -146,9 +148,8 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       });
     }
 
+    // and then the locked balances sorted "low-me" to "high-me" to the right of that
     data.push(...virtualChannelData.slice(firstHalfCutoff));
-
-    console.log(`DataLength: ${data.length}`);
   }
   return (
     <table>
