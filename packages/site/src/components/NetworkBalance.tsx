@@ -153,6 +153,17 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
     // and then the locked balances sorted "low-me" to "high-me" to the right of that
     data.push(...virtualChannelData.slice(firstHalfCutoff));
   }
+
+  // The pie-chart renders the first data point starting 0 degrees (3 o'clock)
+  // and then rotates clockwise. We want the first data point - the user balance,
+  // to sit at the bottom (centered at 12 o'clock).
+  //
+  // we:
+  //   - add 90 degrees to the angle (to start at 6 o'clock instead of 3)
+  //   - subtract half of the angle spanned by the user balance (to center it)
+  const angleOfMyBalance = (myBalanceFreePercentage * 360) / 100;
+  const angleOffset = 90 - angleOfMyBalance / 2;
+
   return (
     <table>
       <tbody>
@@ -173,7 +184,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
               labelPosition={0}
               segmentsStyle={(idx) => ({ color: 'red' })}
               paddingAngle={data.length > 1 ? 0.5 : 0}
-              startAngle={90 - myBalanceFreePercentage * 1.8} // 1.8 = 180 degrees / 100 (percentage)
+              startAngle={angleOffset}
             />
           </td>
           <td className="budget-progress-bars">
