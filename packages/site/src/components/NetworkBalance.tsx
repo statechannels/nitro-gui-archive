@@ -90,13 +90,7 @@ function sortToExtremes(
 }
 
 export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
-  const {
-    myBalanceFree,
-    // myBalanceLocked,
-    theirBalanceFree,
-    // theirBalanceLocked,
-    lockedBalances,
-  } = props;
+  const { myBalanceFree, theirBalanceFree, lockedBalances } = props;
   const sortedVirtualChannels: VirtualChannelBalanceProps[] =
     sortToExtremes(lockedBalances);
   const lockedTotal = sortedVirtualChannels.reduce(
