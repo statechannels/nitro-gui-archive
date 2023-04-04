@@ -1,6 +1,6 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { NetworkBalance, NetworkBalanceProps } from './NetworkBalance';
+import { NetworkBalance, NetworkBalanceProps, VirtualChannelBalanceProps } from './NetworkBalance';
 
 export default {
   title: 'NetworkBalance',
@@ -11,51 +11,87 @@ const Template: ComponentStory<typeof NetworkBalance> = (
   args: NetworkBalanceProps,
 ) => <NetworkBalance {...args} />;
 
-export const EvenStart = Template.bind(this, {
-  myBalanceFree: 10n ** 18n,
-  myBalanceLocked: 0n,
-  theirBalanceFree: 10n ** 18n,
-  theirBalanceLocked: 0n,
+export const Zeros = Template.bind(this, {
+  myBalanceFree: 0n,
+  theirBalanceFree: 0n,
+  lockedBalances: [],
 });
 
-export const Mixed = Template.bind(this, {
-  myBalanceFree: 47n,
-  myBalanceLocked: 5n,
-  theirBalanceFree: 100n,
-  theirBalanceLocked: 11n,
+export const EvenStart = Template.bind(this, {
+  myBalanceFree: 10n ** 18n,
+  theirBalanceFree: 10n ** 18n,
+  lockedBalances: [],
 });
 
 export const ClientStart = Template.bind(this, {
   myBalanceFree: 100n,
-  myBalanceLocked: 0n,
   theirBalanceFree: 0n,
-  theirBalanceLocked: 0n,
+  lockedBalances: [],
 });
 
 export const ClientMid = Template.bind(this, {
   myBalanceFree: 70n,
-  myBalanceLocked: 5n,
   theirBalanceFree: 10n,
-  theirBalanceLocked: 15n,
+  lockedBalances: [],
 });
 
 export const ProviderStart = Template.bind(this, {
   myBalanceFree: 0n,
-  myBalanceLocked: 0n,
   theirBalanceFree: 100n,
-  theirBalanceLocked: 0n,
+  lockedBalances: [],
 });
 
 export const ProviderMid = Template.bind(this, {
   myBalanceFree: 15n,
-  myBalanceLocked: 4n,
   theirBalanceFree: 60n,
-  theirBalanceLocked: 21n,
+  lockedBalances: [],
 });
 
-export const Zeros = Template.bind({
-  myBalanceFree: 0n,
-  myBalanceLocked: 0n,
-  theirBalanceFree: 0n,
-  theirBalanceLocked: 0n,
+export const TwoChannels = Template.bind(this, {
+  myBalanceFree: 47n,
+  theirBalanceFree: 100n,
+  lockedBalances: [
+    {
+      budget: 10n,
+      myPercentage: 0.5,
+    },
+    {
+      budget: 30n,
+      myPercentage: 0.2,
+    },
+  ],
 });
+
+const some = randomChannels(5, 100n);
+
+export const SomeChannels = Template.bind(this, {
+  myBalanceFree: 50n,
+  theirBalanceFree: 100n,
+  lockedBalances: some,
+});
+
+const many = randomChannels(15, 150n);
+
+export const ManyChannels = Template.bind(this, {
+  myBalanceFree: 345n,
+  theirBalanceFree: 123n,
+  lockedBalances: many,
+});
+
+function randomChannels(
+  numChannels: number,
+  budgetCeiling: bigint,
+): VirtualChannelBalanceProps[] {
+  const channels = [];
+  for (let i = 0; i < numChannels; i++) {
+    channels.push(randomChannel(budgetCeiling));
+  }
+  return channels;
+}
+
+function randomChannel(budgetCeiling: bigint): VirtualChannelBalanceProps {
+  return {
+    budget: BigInt(Math.floor(Math.random() * Number(budgetCeiling))),
+    myPercentage: Math.random(),
+  };
+}
