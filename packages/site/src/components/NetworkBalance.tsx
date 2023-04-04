@@ -103,7 +103,8 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
     myBalanceFree +
     sortedVirtualChannels.reduce(
       (acc, x) =>
-        acc + (x.budget * BigInt(Math.round(100 * x.myPercentage))) / 100n,
+        acc +
+        (x.budget * BigInt(Math.round(10_000 * x.myPercentage))) / 10_000n,
       BigInt(0),
     );
   let data = [{ title: '0', value: 100, color: 'red' }];
