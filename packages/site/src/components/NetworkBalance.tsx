@@ -103,11 +103,11 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
   const color = ((status: NetworkBalanceProps['status']): string => {
     switch (status) {
       case 'running':
-        return '#4caf50'; // mui-green-500 todo: move colors to _variables.scss
+        return styles.cGreen;
       case 'unresponsive-peer':
-        return '#ffa000'; // mui-amber-700
+        return styles.cAmber;
       case 'under-challenge':
-        return '#b71c1c'; // mui-red-900
+        return styles.cRed;
       default:
         return styles.cOrange;
     }
