@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-for-of */
 import {
   Box,
   LinearProgress,
@@ -70,7 +71,7 @@ function interpolateColor(
 function sortToExtremes(
   channels: VirtualChannelBalanceProps[],
 ): VirtualChannelBalanceProps[] {
-  const sorted = channels.sort((a, b) => b.myPercentage - a.myPercentage);
+  channels.sort((a, b) => a.myPercentage - b.myPercentage);
 
   const toExtremes: VirtualChannelBalanceProps[] = [];
 
@@ -78,12 +79,12 @@ function sortToExtremes(
 
   // from smallest to largest, alternate adding to the left or right of the array
   // End result is smallest in the middle, largest to the outsides
-  while (sorted.length > 0) {
+  for (let i = 0; i < channels.length; i++) {
     if (next === 'l') {
-      toExtremes.unshift(sorted.pop() as VirtualChannelBalanceProps);
+      toExtremes.unshift(channels[i]);
       next = 'r';
     } else {
-      toExtremes.push(sorted.pop() as VirtualChannelBalanceProps);
+      toExtremes.push(channels[i]);
       next = 'l';
     }
   }
