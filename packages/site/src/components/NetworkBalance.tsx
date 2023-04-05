@@ -172,6 +172,44 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
     data = [{ title: '0', value: 100, color: 'red' }];
   }
 
+  if (props.asTable) {
+    return (
+      <table>
+        <tbody>
+          <tr>
+            <td></td>
+            <td className="budget-progress-bars">
+              <span>Available spend capacity</span>
+              <LinearProgressWithLabel
+                variant="determinate"
+                value={myBalanceFreePercentage ?? 0}
+                label={prettyPrintWei(myBalanceFree)}
+                className={'bar me'}
+              />
+              <span>Available receive capacity</span>
+              <LinearProgressWithLabel
+                variant="determinate"
+                value={theirBalanceFreePercentage ?? 0}
+                label={prettyPrintWei(theirBalanceFree)}
+                className={'bar their'}
+              />
+
+              <span>Locked Capacity</span>
+              <LinearProgressWithLabel
+                variant="determinate"
+                value={
+                  100 - myBalanceFreePercentage - theirBalanceFreePercentage
+                }
+                label={prettyPrintWei(lockedTotal)}
+                className={'bar locked-me'}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
+
   // The pie-chart renders the first data point starting 0 degrees (3 o'clock)
   // and then rotates clockwise. We want the first data point - the user balance,
   // to sit at the bottom (centered at 12 o'clock).
@@ -183,55 +221,23 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
   const angleOffset = 90 - angleOfMyBalance / 2;
 
   return (
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <PieChart
-              className="budget-pie-chart"
-              animate
-              lineWidth={18}
-              labelStyle={(index) => ({
-                fill: '#ea692b',
-                fontSize: '10px',
-                fontFamily: 'sans-serif',
-              })}
-              radius={42}
-              data={data}
-              label={({ dataEntry }) => prettyPrintWei(myTotal)}
-              labelPosition={0}
-              segmentsStyle={(idx) => ({ color: 'red' })}
-              paddingAngle={data.length > 1 ? 0.5 : 0}
-              startAngle={angleOffset}
-            />
-          </td>
-          <td className="budget-progress-bars">
-            <span>Available spend capacity</span>
-            <LinearProgressWithLabel
-              variant="determinate"
-              value={myBalanceFreePercentage ?? 0}
-              label={prettyPrintWei(myBalanceFree)}
-              className={'bar me'}
-            />
-            <span>Available receive capacity</span>
-            <LinearProgressWithLabel
-              variant="determinate"
-              value={theirBalanceFreePercentage ?? 0}
-              label={prettyPrintWei(theirBalanceFree)}
-              className={'bar their'}
-            />
-
-            <span>Locked Capacity</span>
-            <LinearProgressWithLabel
-              variant="determinate"
-              value={100 - myBalanceFreePercentage - theirBalanceFreePercentage}
-              label={prettyPrintWei(lockedTotal)}
-              className={'bar locked-me'}
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <PieChart
+      className="budget-pie-chart"
+      animate
+      lineWidth={18}
+      labelStyle={(index) => ({
+        fill: color,
+        fontSize: '10px',
+        fontFamily: 'sans-serif',
+      })}
+      radius={42}
+      data={data}
+      label={({ dataEntry }) => prettyPrintWei(myTotal)}
+      labelPosition={0}
+      segmentsStyle={(idx) => ({ color: 'red' })}
+      paddingAngle={data.length > 1 ? 0.5 : 0}
+      startAngle={angleOffset}
+    />
   );
 };
 
