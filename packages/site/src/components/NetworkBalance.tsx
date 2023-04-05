@@ -18,6 +18,8 @@ BigInt.prototype.toJSON = function (): string {
 };
 
 export type NetworkBalanceProps = {
+  asTable?: boolean;
+  status: 'running' | 'unresponsive-peer' | 'under-challenge';
   myBalanceFree: bigint;
   theirBalanceFree: bigint;
   lockedBalances: VirtualChannelBalanceProps[];
@@ -98,6 +100,19 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
     BigInt(0),
   );
 
+  const color = ((status: NetworkBalanceProps['status']): string => {
+    switch (status) {
+      case 'running':
+        return styles.cGreen;
+      case 'unresponsive-peer':
+        return styles.cAmber;
+      case 'under-challenge':
+        return styles.cRed;
+      default:
+        return styles.cOrange;
+    }
+  })(props.status);
+
   const total = myBalanceFree + theirBalanceFree + lockedTotal;
   const myTotal =
     myBalanceFree +
@@ -107,7 +122,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
         (x.budget * BigInt(Math.round(10_000 * x.myPercentage))) / 10_000n,
       BigInt(0),
     );
-  let data = [{ title: '0', value: 100, color: 'red' }];
+  let data = [];
   let myBalanceFreePercentage, theirBalanceFreePercentage;
 
   const virtualChannelData = sortedVirtualChannels.map((x) => ({
@@ -115,7 +130,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       x.myPercentage * Number(x.budget),
     )} Mine`,
     value: percentageOfTotal(x.budget, total),
-    color: interpolateColor(styles.cGrey, styles.cOrange, x.myPercentage),
+    color: interpolateColor(styles.cGrey, color, x.myPercentage),
   }));
 
   if (total > 0) {
@@ -130,7 +145,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       data.push({
         title: `${prettyPrintWei(myBalanceFree)}`,
         value: myBalanceFreePercentage,
-        color: styles.cOrange,
+        color,
       });
     }
 
@@ -152,6 +167,47 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
 
     // and then the locked balances sorted "low-me" to "high-me" to the right of that
     data.push(...virtualChannelData.slice(firstHalfCutoff));
+  } else {
+    // failure case: no received balance information
+    data = [{ title: '0', value: 100, color: 'red' }];
+  }
+
+  if (props.asTable) {
+    return (
+      <table>
+        <tbody>
+          <tr>
+            <td></td>
+            <td className="budget-progress-bars">
+              <span>Available spend capacity</span>
+              <LinearProgressWithLabel
+                variant="determinate"
+                value={myBalanceFreePercentage ?? 0}
+                label={prettyPrintWei(myBalanceFree)}
+                className={'bar me'}
+              />
+              <span>Available receive capacity</span>
+              <LinearProgressWithLabel
+                variant="determinate"
+                value={theirBalanceFreePercentage ?? 0}
+                label={prettyPrintWei(theirBalanceFree)}
+                className={'bar their'}
+              />
+
+              <span>Locked Capacity</span>
+              <LinearProgressWithLabel
+                variant="determinate"
+                value={
+                  100 - myBalanceFreePercentage - theirBalanceFreePercentage
+                }
+                label={prettyPrintWei(lockedTotal)}
+                className={'bar locked-me'}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
   }
 
   // The pie-chart renders the first data point starting 0 degrees (3 o'clock)
@@ -165,55 +221,23 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
   const angleOffset = 90 - angleOfMyBalance / 2;
 
   return (
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <PieChart
-              className="budget-pie-chart"
-              animate
-              lineWidth={18}
-              labelStyle={(index) => ({
-                fill: '#ea692b',
-                fontSize: '10px',
-                fontFamily: 'sans-serif',
-              })}
-              radius={42}
-              data={data}
-              label={({ dataEntry }) => prettyPrintWei(myTotal)}
-              labelPosition={0}
-              segmentsStyle={(idx) => ({ color: 'red' })}
-              paddingAngle={data.length > 1 ? 0.5 : 0}
-              startAngle={angleOffset}
-            />
-          </td>
-          <td className="budget-progress-bars">
-            <span>Available spend capacity</span>
-            <LinearProgressWithLabel
-              variant="determinate"
-              value={myBalanceFreePercentage ?? 0}
-              label={prettyPrintWei(myBalanceFree)}
-              className={'bar me'}
-            />
-            <span>Available receive capacity</span>
-            <LinearProgressWithLabel
-              variant="determinate"
-              value={theirBalanceFreePercentage ?? 0}
-              label={prettyPrintWei(theirBalanceFree)}
-              className={'bar their'}
-            />
-
-            <span>Locked Capacity</span>
-            <LinearProgressWithLabel
-              variant="determinate"
-              value={100 - myBalanceFreePercentage - theirBalanceFreePercentage}
-              label={prettyPrintWei(lockedTotal)}
-              className={'bar locked-me'}
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <PieChart
+      className="budget-pie-chart"
+      animate
+      lineWidth={18}
+      labelStyle={(index) => ({
+        fill: color,
+        fontSize: '10px',
+        fontFamily: 'sans-serif',
+      })}
+      radius={42}
+      data={data}
+      label={({ dataEntry }) => prettyPrintWei(myTotal)}
+      labelPosition={0}
+      segmentsStyle={(idx) => ({ color: 'red' })}
+      paddingAngle={data.length > 1 ? 0.5 : 0}
+      startAngle={angleOffset}
+    />
   );
 };
 

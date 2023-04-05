@@ -3,6 +3,9 @@ export type I_globalScss = {
   cOrangeLite: string;
   cGreyLite: string;
   cGrey: string;
+  cGreen: string;
+  cAmber: string;
+  cRed: string;
 };
 
 export const styles: I_globalScss;
