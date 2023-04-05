@@ -5,6 +5,7 @@ module.exports = {
       files: ['**/*.{ts,tsx}'],
       rules: {
         'jsdoc/require-jsdoc': 0,
+        '@typescript-eslint/prefer-for-of': 0,
       },
     },
   ],
