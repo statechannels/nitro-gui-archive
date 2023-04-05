@@ -18,6 +18,8 @@ BigInt.prototype.toJSON = function (): string {
 };
 
 export type NetworkBalanceProps = {
+  asTable?: boolean;
+  status: 'running' | 'unresponsive-peer' | 'under-challenge';
   myBalanceFree: bigint;
   theirBalanceFree: bigint;
   lockedBalances: VirtualChannelBalanceProps[];
@@ -98,6 +100,19 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
     BigInt(0),
   );
 
+  const color = ((status: NetworkBalanceProps['status']): string => {
+    switch (status) {
+      case 'running':
+        return '#4caf50'; // mui-green-500 todo: move colors to _variables.scss
+      case 'unresponsive-peer':
+        return '#ffa000'; // mui-amber-700
+      case 'under-challenge':
+        return '#b71c1c'; // mui-red-900
+      default:
+        return styles.cOrange;
+    }
+  })(props.status);
+
   const total = myBalanceFree + theirBalanceFree + lockedTotal;
   const myTotal =
     myBalanceFree +
@@ -115,7 +130,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       x.myPercentage * Number(x.budget),
     )} Mine`,
     value: percentageOfTotal(x.budget, total),
-    color: interpolateColor(styles.cGrey, styles.cOrange, x.myPercentage),
+    color: interpolateColor(styles.cGrey, color, x.myPercentage),
   }));
 
   if (total > 0) {
@@ -130,7 +145,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       data.push({
         title: `${prettyPrintWei(myBalanceFree)}`,
         value: myBalanceFreePercentage,
-        color: styles.cOrange,
+        color,
       });
     }
 
