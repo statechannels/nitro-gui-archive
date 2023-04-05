@@ -122,7 +122,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
         (x.budget * BigInt(Math.round(10_000 * x.myPercentage))) / 10_000n,
       BigInt(0),
     );
-  let data = [{ title: '0', value: 100, color: 'red' }];
+  let data = [];
   let myBalanceFreePercentage, theirBalanceFreePercentage;
 
   const virtualChannelData = sortedVirtualChannels.map((x) => ({
@@ -167,6 +167,9 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
 
     // and then the locked balances sorted "low-me" to "high-me" to the right of that
     data.push(...virtualChannelData.slice(firstHalfCutoff));
+  } else {
+    // failure case: no received balance information
+    data = [{ title: '0', value: 100, color: 'red' }];
   }
 
   // The pie-chart renders the first data point starting 0 degrees (3 o'clock)
