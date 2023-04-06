@@ -13,15 +13,6 @@ export default meta;
 
 type NB = StoryObj<NetworkBalanceProps>;
 
-export const Controls: NB = {
-  args: {
-    myBalanceFree: 100n,
-    theirBalanceFree: 100n,
-    status: 'running',
-    lockedBalances: [],
-  },
-};
-
 export const Zeros: NB = {
   args: {
     myBalanceFree: 0n,
