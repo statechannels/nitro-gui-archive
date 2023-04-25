@@ -1,10 +1,16 @@
-# TypeScript Example Snap Front-end
+# React + Typescript Front-end
 
 This project was bootstrapped with [Gatsby](https://www.gatsbyjs.com/).
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `yarn storybook`
+
+Runs the storybook instance for the project, for\
+previewing components in a variety of configured states.
+Open [http://localhost:6006](http://localhost:6006) to view it in the browser.
 
 ### `yarn start`
 
