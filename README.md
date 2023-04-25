@@ -1,8 +1,13 @@
-# Statechannels Snap Monorepo
+# Nitro-GUI Monorepo
 
-This repo contains work toward a UI for a statechannel network.
+This repo contains work toward a web UI for a [nitro](https://github.com/statechannels/go-nitro) powered statechannel network.
 
-Check out UI demos here: https://nitro-storybook.netlify.app/
+UI component demos deployed here: https://nitro-storybook.netlify.app/
+
+## Packages
+
+- package `site` contains the web UI ([readme](./packages/site/README.md))
+- package `nitro-rpc-client` contains a typescript library for communicating with go-nitro's RPC api. ([readme](./packages/nitro-rpc-client/readme.md))
 
 ## Storybook
 
