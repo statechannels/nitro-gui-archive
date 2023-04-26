@@ -12,3 +12,6 @@ UI component demos deployed here: https://nitro-storybook.netlify.app/
 ## Storybook
 
 Components can be viewed by running `yarn storybook` or `npm run storybook` from the `packages/site` directory.
+
+
+![Screenshot 2023-04-26 at 17 08 11](https://user-images.githubusercontent.com/1833419/234635968-016eb70a-debd-413f-a0d9-bce76af78783.png)
