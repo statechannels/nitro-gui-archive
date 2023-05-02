@@ -3,12 +3,12 @@ import {
   LinearProgress,
   LinearProgressProps,
   Typography,
-} from '@material-ui/core';
-import bigDecimal from 'js-big-decimal';
-import { PieChart } from 'react-minimal-pie-chart';
-import './NetworkBalance.scss';
-import styles from './_variables.scss';
-import { prettyPrintWei } from './utils';
+} from "@material-ui/core";
+import bigDecimal from "js-big-decimal-esm";
+import { PieChart } from "react-minimal-pie-chart";
+import "./NetworkBalance.scss";
+import colors from "../styles/colors.module.css";
+import { prettyPrintWei } from "../utils";
 
 // This prevents a runtime error in storybook
 // @ts-ignore
@@ -19,7 +19,7 @@ BigInt.prototype.toJSON = function (): string {
 
 export type NetworkBalanceProps = {
   asTable?: boolean;
-  status: 'running' | 'unresponsive-peer' | 'under-challenge';
+  status: "running" | "unresponsive-peer" | "under-challenge";
   myBalanceFree: bigint;
   theirBalanceFree: bigint;
   lockedBalances: VirtualChannelBalanceProps[];
@@ -45,46 +45,46 @@ function percentageOfTotal(quantity: bigint, total: bigint): number {
 function interpolateColor(
   colorA: string,
   colorB: string,
-  percentage: number,
+  percentage: number
 ): string {
   const hex = (x: string) => parseInt(x, 16);
 
   const r = Math.round(
     hex(colorA.substr(1, 2)) * (1 - percentage) +
-      hex(colorB.substr(1, 2)) * percentage,
+      hex(colorB.substr(1, 2)) * percentage
   ).toString(16);
 
   const g = Math.round(
     hex(colorA.substr(3, 2)) * (1 - percentage) +
-      hex(colorB.substr(3, 2)) * percentage,
+      hex(colorB.substr(3, 2)) * percentage
   ).toString(16);
 
   const b = Math.round(
     hex(colorA.substr(5, 2)) * (1 - percentage) +
-      hex(colorB.substr(5, 2)) * percentage,
+      hex(colorB.substr(5, 2)) * percentage
   ).toString(16);
 
   return `#${r}${g}${b}`;
 }
 
 function sortToExtremes(
-  channels: VirtualChannelBalanceProps[],
+  channels: VirtualChannelBalanceProps[]
 ): VirtualChannelBalanceProps[] {
   channels.sort((a, b) => a.myPercentage - b.myPercentage);
 
   const toExtremes: VirtualChannelBalanceProps[] = [];
 
-  let next: 'l' | 'r' = 'l';
+  let next: "l" | "r" = "l";
 
   // from smallest to largest, alternate adding to the left or right of the array
   // End result is smallest in the middle, largest to the outsides
   for (let i = 0; i < channels.length; i++) {
-    if (next === 'l') {
+    if (next === "l") {
       toExtremes.unshift(channels[i]);
-      next = 'r';
+      next = "r";
     } else {
       toExtremes.push(channels[i]);
-      next = 'l';
+      next = "l";
     }
   }
 
@@ -97,19 +97,19 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
     sortToExtremes(lockedBalances);
   const lockedTotal = sortedVirtualChannels.reduce(
     (acc, x) => acc + x.budget,
-    BigInt(0),
+    BigInt(0)
   );
 
-  const color = ((status: NetworkBalanceProps['status']): string => {
+  const color = ((status: NetworkBalanceProps["status"]): string => {
     switch (status) {
-      case 'running':
-        return styles.cGreen;
-      case 'unresponsive-peer':
-        return styles.cAmber;
-      case 'under-challenge':
-        return styles.cRed;
+      case "running":
+        return colors.cGreen;
+      case "unresponsive-peer":
+        return colors.cAmber;
+      case "under-challenge":
+        return colors.cRed;
       default:
-        return styles.cOrange;
+        return colors.cOrange;
     }
   })(props.status);
 
@@ -120,17 +120,18 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       (acc, x) =>
         acc +
         (x.budget * BigInt(Math.round(10_000 * x.myPercentage))) / 10_000n,
-      BigInt(0),
+      BigInt(0)
     );
   let data = [];
-  let myBalanceFreePercentage, theirBalanceFreePercentage;
+  let myBalanceFreePercentage: number;
+  let theirBalanceFreePercentage: number;
 
   const virtualChannelData = sortedVirtualChannels.map((x) => ({
     title: `${prettyPrintWei(x.budget)} Locked, ${prettyPrintWei(
-      x.myPercentage * Number(x.budget),
+      (x.budget * BigInt(Math.round(10_000 * x.myPercentage))) / 10_000n
     )} Mine`,
     value: percentageOfTotal(x.budget, total),
-    color: interpolateColor(styles.cGrey, color, x.myPercentage),
+    color: interpolateColor(colors.cGrey, color, x.myPercentage),
   }));
 
   if (total > 0) {
@@ -161,7 +162,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       data.push({
         title: `Receive capacity: ${prettyPrintWei(theirBalanceFree)}`,
         value: theirBalanceFreePercentage,
-        color: styles.cGrey,
+        color: colors.cGrey,
       });
     }
 
@@ -169,7 +170,9 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
     data.push(...virtualChannelData.slice(firstHalfCutoff));
   } else {
     // failure case: no received balance information
-    data = [{ title: '0', value: 100, color: 'red' }];
+    data = [{ title: "0", value: 100, color: "red" }];
+    myBalanceFreePercentage = 0;
+    theirBalanceFreePercentage = 0;
   }
 
   if (props.asTable) {
@@ -184,14 +187,14 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
                 variant="determinate"
                 value={myBalanceFreePercentage ?? 0}
                 label={prettyPrintWei(myBalanceFree)}
-                className={'bar me'}
+                className={"bar me"}
               />
               <span>Available receive capacity</span>
               <LinearProgressWithLabel
                 variant="determinate"
                 value={theirBalanceFreePercentage ?? 0}
                 label={prettyPrintWei(theirBalanceFree)}
-                className={'bar their'}
+                className={"bar their"}
               />
 
               <span>Locked Capacity</span>
@@ -201,7 +204,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
                   100 - myBalanceFreePercentage - theirBalanceFreePercentage
                 }
                 label={prettyPrintWei(lockedTotal)}
-                className={'bar locked-me'}
+                className={"bar locked-me"}
               />
             </td>
           </tr>
@@ -225,16 +228,16 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
       className="budget-pie-chart"
       animate
       lineWidth={18}
-      labelStyle={(index) => ({
+      labelStyle={() => ({
         fill: color,
-        fontSize: '10px',
-        fontFamily: 'sans-serif',
+        fontSize: "10px",
+        fontFamily: "sans-serif",
       })}
       radius={42}
       data={data}
-      label={({ dataEntry }) => prettyPrintWei(myTotal)}
+      label={() => prettyPrintWei(myTotal)}
       labelPosition={0}
-      segmentsStyle={(idx) => ({ color: 'red' })}
+      segmentsStyle={() => ({ color: "red" })}
       paddingAngle={data.length > 1 ? 0.5 : 0}
       startAngle={angleOffset}
     />
@@ -242,7 +245,7 @@ export const NetworkBalance: React.FC<NetworkBalanceProps> = (props) => {
 };
 
 function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number; label: string },
+  props: LinearProgressProps & { value: number; label: string }
 ) {
   return (
     <Box display="flex" alignItems="center">
