@@ -1,12 +1,18 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import statechannelsLogo from "./assets/statechannels.svg";
 import "./App.css";
+import reactLogo from "./assets/react.svg";
+import statechannelsLogo from "./assets/statechannels.svg";
 import { NetworkBalance } from "./components/NetworkBalance";
+import viteLogo from "/vite.svg";
 
 function App() {
-  const [count, setCount] = useState(0);
+  let total = BigInt(200);
+  let mine = BigInt(200);
+
+  setInterval(() => {
+    if (mine > BigInt(0)) {
+      mine -= BigInt(1);
+    }
+  }, 1000);
 
   return (
     <>
@@ -26,8 +32,8 @@ function App() {
         <NetworkBalance
           status="running"
           lockedBalances={[]}
-          myBalanceFree={BigInt(50)}
-          theirBalanceFree={BigInt(200)}
+          myBalanceFree={mine}
+          theirBalanceFree={total - mine}
         ></NetworkBalance>
 
         <p>
